@@ -10,6 +10,7 @@ import com.example.flowersapp.adapter.FlowerAdapter
 import com.example.flowersapp.databinding.FragmentFlowersBinding
 import com.example.flowersapp.model.Flowers
 import com.example.flowersapp.rest.FlowersAPI
+import com.example.flowersapp.rest.FlowersService
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,11 +35,9 @@ class FlowersFragment : Fragment() {
         FragmentFlowersBinding.inflate(layoutInflater)
     }
 
-    private val flowersAdapter by lazy{
+    private val flowersAdapter by lazy {
         FlowerAdapter()
     }
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,28 +53,29 @@ class FlowersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-      binding.flowerRecycler.apply{
-          layoutManager=GridLayoutManager(requireContext(),3,GridLayoutManager.VERTICAL,false)
-          adapter=flowersAdapter
-      }
+        binding.flowerRecycler.apply {
+            layoutManager =
+                GridLayoutManager(requireContext(), 3, GridLayoutManager.VERTICAL, false)
+            adapter = flowersAdapter
+        }
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
 
-        FlowersAPI.retrofitService.getFlowers().enqueue(object : Callback<Flowers> {
+        FlowersService.retrofitService.getFlowers().enqueue(object : Callback<Flowers> {
             override fun onResponse(call: Call<Flowers>, response: Response<Flowers>) {
-               if(response.isSuccessful){
-                   response.body()?.let {
-                       flowersAdapter.updateFlowers(it)
-                       Snackbar.make(requireView(),it[0].name,Snackbar.LENGTH_LONG).show()
-                   }?: Snackbar.make(requireView(),"Error",Snackbar.LENGTH_LONG).show()
-               }
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        flowersAdapter.updateFlowers(it)
+                        Snackbar.make(requireView(), it[0].name, Snackbar.LENGTH_LONG).show()
+                    } ?: Snackbar.make(requireView(), "Error", Snackbar.LENGTH_LONG).show()
+                }
             }
 
             override fun onFailure(call: Call<Flowers>, t: Throwable) {
-                Snackbar.make(requireView(),t.localizedMessage,Snackbar.LENGTH_LONG).show()
+                Snackbar.make(requireView(), t.localizedMessage, Snackbar.LENGTH_LONG).show()
             }
         })
     }

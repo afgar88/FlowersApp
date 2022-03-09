@@ -15,14 +15,8 @@ interface FlowersAPI {
 
     companion object {
         const val BASE_URL = "https://services.hanselandpetal.com/"
+        const val PHOTOS_URL= BASE_URL+"photos/"
 
-        val retrofitService =
-            Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                //.addCallAdapterFactory()
-                .build()
-                .create(FlowersAPI::class.java)
 
     }
 }
